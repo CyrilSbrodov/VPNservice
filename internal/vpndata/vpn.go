@@ -184,9 +184,13 @@ func GetVPNlist() []VPN {
 		vpnstr := ""
 		ip := strings.Split(filelines[i], ",")
 		if len(ip) > 5 {
-			vpnstr = ip[0] + "," + ip[1] + "," + ip[5] + "," + "\n"
-			if _, err := f.WriteString(vpnstr); err != nil {
-				log.Fatal(err)
+			if ip[5] == "Russian Federation" {
+				continue
+			} else {
+				vpnstr = ip[0] + "," + ip[1] + "," + ip[5] + "," + "\n"
+				if _, err := f.WriteString(vpnstr); err != nil {
+					log.Fatal(err)
+				}
 			}
 		}
 	}

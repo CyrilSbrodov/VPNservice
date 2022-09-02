@@ -21,4 +21,6 @@ func main() {
 	wg.Wait()
 	name := vpndata.CreateVPNConnection(vpn)
 	vpndata.DisconnectVPNConnection(name)
+	//serv := server.NewApp()
+	//serv.Run()
 }
