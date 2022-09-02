@@ -9,8 +9,6 @@ import (
 func main() {
 	wg := sync.WaitGroup{}
 
-	//vpndata.DisconnectVPNConnection()
-	//vpndata.RemoveVPNConnection()
 	vpndata.GetVPN()
 
 	vpn := vpndata.GetVPNlist()
@@ -21,5 +19,6 @@ func main() {
 	}
 	fmt.Println("ждем все горутины")
 	wg.Wait()
-	vpndata.CreateVPNConnection(vpn)
+	name := vpndata.CreateVPNConnection(vpn)
+	vpndata.DisconnectVPNConnection(name)
 }

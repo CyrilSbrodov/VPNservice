@@ -44,14 +44,13 @@ func GetVPN() {
 
 }
 
-func CreateVPNConnection(vpn []VPN) {
+func CreateVPNConnection(vpn []VPN) *VPN {
 	sort.SliceStable(vpn, func(i, j int) bool {
 		return vpn[i].Ping < vpn[j].Ping
 	})
-	fmt.Println(vpn)
 
 	vpnName := fmt.Sprintf("Add-VpnConnection -Name \"%v\" -ServerAddress \"%v\" -TunnelType Automatic -L2tpPsk \"vpn\" -Force -AuthenticationMethod MSChapv2 -RememberCredential", vpn[0].Name, vpn[0].IP)
-	fmt.Println(vpnName)
+
 	args := strings.Split(vpnName, " ")
 	cmd := exec.Command("powershell.exe", args...)
 	cmd.Stdout = os.Stdout
@@ -64,6 +63,8 @@ func CreateVPNConnection(vpn []VPN) {
 	}
 
 	startVPNConnection(&vpn[0])
+
+	return &vpn[0]
 }
 
 func startVPNConnection(vpn *VPN) {
@@ -80,8 +81,9 @@ func startVPNConnection(vpn *VPN) {
 	}
 }
 
-func DisconnectVPNConnection() {
-	removeVPN := "rasdial \"123\" /DISCONNECT"
+func DisconnectVPNConnection(vpn *VPN) {
+
+	removeVPN := fmt.Sprintf("rasdial \"%v\" /DISCONNECT", vpn.Name)
 	args := strings.Split(removeVPN, " ")
 	cmd := exec.Command("powershell.exe", args...)
 	cmd.Stdout = os.Stdout
@@ -92,11 +94,12 @@ func DisconnectVPNConnection() {
 	if err != nil {
 		fmt.Printf("cmd.Run: %s failed: %s\n", err, err)
 	}
+	RemoveVPNConnection(vpn)
 }
 
-func RemoveVPNConnection() {
+func RemoveVPNConnection(vpn *VPN) {
 
-	removeVPN := "Remove-VpnConnection -Name \"123\""
+	removeVPN := fmt.Sprintf("Remove-VpnConnection -Name \"%v\"", vpn.Name)
 	args := strings.Split(removeVPN, " ")
 
 	cmd := exec.Command("powershell.exe", args...)
