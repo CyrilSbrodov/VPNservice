@@ -17,7 +17,7 @@ func main() {
 		wg.Add(1)
 		go vpndata.Ping(&vpn[i], &wg)
 	}
-	fmt.Println("ждем все горутины")
+	fmt.Println("Выполнение программы. Ожидайте.")
 	wg.Wait()
 	name := vpndata.CreateVPNConnection(vpn)
 	vpndata.DisconnectVPNConnection(name)
